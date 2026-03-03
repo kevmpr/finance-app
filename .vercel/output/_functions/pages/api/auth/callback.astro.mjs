@@ -1,4 +1,4 @@
-import { s as supabase } from '../../../chunks/supabase_BWi3Rcbw.mjs';
+import { s as supabase } from '../../../chunks/supabase_ZWfVKi9Z.mjs';
 import { m as mapSupabaseError, u as useTranslations } from '../../../chunks/utils_ZRIF6T7E.mjs';
 export { renderers } from '../../../renderers.mjs';
 

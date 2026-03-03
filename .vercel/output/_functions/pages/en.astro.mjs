@@ -2,7 +2,7 @@ import { e as createComponent, k as renderComponent, l as renderScript, r as ren
 import 'piccolore';
 import { $ as $$Layout } from '../chunks/Layout_C8wWFTH_.mjs';
 import { g as getLangFromUrl, u as useTranslations } from '../chunks/utils_ZRIF6T7E.mjs';
-import { s as supabase } from '../chunks/supabase_BWi3Rcbw.mjs';
+import { s as supabase } from '../chunks/supabase_ZWfVKi9Z.mjs';
 export { renderers } from '../renderers.mjs';
 
 const $$Astro = createAstro();
