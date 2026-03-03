@@ -1,6 +1,9 @@
 # Dependencies
 node_modules/
 
+# LLM reference docs (local only)
+llms-full.txt
+
 # Build output
 dist/
 
