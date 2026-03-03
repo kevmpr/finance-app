@@ -1,0 +1,187 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+import LanguageSelector from './LanguageSelector.astro';
+import { getLangFromUrl, useTranslations } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const user = Astro.locals.user;
+const isLoggedIn = !!user;
+const userInitial = user?.email?.charAt(0).toUpperCase() || '?';
+const userName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || '';
+---
+
+<nav id="navbar" class="fixed top-0 left-0 right-0 z-50">
+  <div class="bg-slate-900/80 backdrop-blur-md border-b border-slate-700/30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <!-- Logo -->
+        <a href={`/${lang}/`} class="flex items-center gap-2 group">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center text-white font-bold text-sm group-hover:scale-110 transition-transform shadow-lg shadow-emerald-500/20">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+            </svg>
+          </div>
+          <span class="font-bold text-lg bg-gradient-to-r from-emerald-400 to-cyan-400 bg-clip-text text-transparent">
+            FinApp
+          </span>
+        </a>
+
+        <!-- Desktop Navigation (only when logged in) -->
+        {isLoggedIn && (
+          <div class="hidden md:flex items-center gap-1">
+            <a href={`/${lang}/`} class="nav-link" data-page="dashboard">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+              {t('nav.dashboard')}
+            </a>
+            <a href={`/${lang}/transactions`} class="nav-link" data-page="transactions">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+              {t('nav.transactions')}
+            </a>
+            <a href={`/${lang}/savings`} class="nav-link" data-page="savings">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+              {t('nav.savings')}
+            </a>
+            <a href={`/${lang}/data`} class="nav-link" data-page="data">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path></svg>
+              {t('nav.data')}
+            </a>
+          </div>
+        )}
+
+        <!-- Controls -->
+        <div class="flex items-center gap-2">
+          <LanguageSelector />
+          <ThemeToggle />
+
+          {isLoggedIn ? (
+            <!-- Logged in: user avatar + sign out -->
+            <a href="/api/auth/signout" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-700/50 transition-colors text-sm text-slate-300 group">
+              <div class="w-7 h-7 rounded-full bg-gradient-to-br from-emerald-500 to-cyan-500 flex items-center justify-center text-white text-xs font-bold">
+                {userInitial}
+              </div>
+              <span class="hidden sm:inline">{userName}</span>
+              <svg class="w-4 h-4 text-slate-500 group-hover:text-rose-400 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+            </a>
+          ) : (
+            <!-- Not logged in: login button -->
+            <a href={`/${lang}/login`} class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 transition-colors text-sm font-medium text-white">
+              Login
+            </a>
+          )}
+
+          <!-- Mobile menu button -->
+          <button id="mobile-menu-btn" class="md:hidden p-2 rounded-lg hover:bg-slate-700/50 transition-colors" aria-label="Menu">
+            <svg id="menu-icon" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            </svg>
+            <svg id="close-icon" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="md:hidden bg-slate-900/95 backdrop-blur-md border-t border-slate-700/30 overflow-hidden transition-[max-height,opacity] duration-300 ease-out max-h-0 opacity-0">
+      <div class="px-4 py-3 space-y-1">
+        {isLoggedIn ? (
+          <>
+            <a href={`/${lang}/`} class="mobile-nav-link">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+              {t('nav.dashboard')}
+            </a>
+            <a href={`/${lang}/transactions`} class="mobile-nav-link">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+              {t('nav.transactions')}
+            </a>
+            <a href={`/${lang}/savings`} class="mobile-nav-link">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+              {t('nav.savings')}
+            </a>
+            <a href={`/${lang}/data`} class="mobile-nav-link">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3V10"></path></svg>
+              {t('nav.data')}
+            </a>
+            <a href="/api/auth/signout" class="mobile-nav-link text-rose-400">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path></svg>
+              {t('nav.logout')}
+            </a>
+          </>
+        ) : (
+          <a href={`/${lang}/login`} class="mobile-nav-link text-emerald-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path></svg>
+            Login
+          </a>
+        )}
+      </div>
+    </div>
+  </div>
+</nav>
+
+<style>
+  .nav-link {
+    @apply flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium text-slate-400 hover:text-emerald-400 hover:bg-emerald-900/20 transition-all duration-200;
+  }
+  .nav-link.active {
+    @apply text-emerald-400 bg-emerald-900/30;
+  }
+  .mobile-nav-link {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-base font-medium text-slate-300 hover:text-emerald-400 hover:bg-emerald-900/20;
+    opacity: 0;
+    transform: translateY(-8px);
+    transition: opacity 0.25s ease, transform 0.25s ease, background-color 0.2s, color 0.2s;
+  }
+  #mobile-menu.menu-open .mobile-nav-link {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #mobile-menu.menu-open .mobile-nav-link:nth-child(1) { transition-delay: 50ms; }
+  #mobile-menu.menu-open .mobile-nav-link:nth-child(2) { transition-delay: 100ms; }
+  #mobile-menu.menu-open .mobile-nav-link:nth-child(3) { transition-delay: 150ms; }
+  #mobile-menu.menu-open .mobile-nav-link:nth-child(4) { transition-delay: 200ms; }
+  #mobile-menu.menu-open .mobile-nav-link:nth-child(5) { transition-delay: 250ms; }
+</style>
+
+<script>
+  // Mobile menu toggle
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+  const menuIcon = document.getElementById('menu-icon');
+  const closeIcon = document.getElementById('close-icon');
+
+  function openMenu() {
+    if (!mobileMenu) return;
+    mobileMenu.classList.remove('max-h-0', 'opacity-0');
+    mobileMenu.classList.add('max-h-96', 'opacity-100', 'menu-open');
+    menuIcon?.classList.add('hidden');
+    closeIcon?.classList.remove('hidden');
+  }
+
+  function closeMenu() {
+    if (!mobileMenu) return;
+    mobileMenu.classList.remove('max-h-96', 'opacity-100', 'menu-open');
+    mobileMenu.classList.add('max-h-0', 'opacity-0');
+    menuIcon?.classList.remove('hidden');
+    closeIcon?.classList.add('hidden');
+  }
+
+  mobileMenuBtn?.addEventListener('click', () => {
+    const isOpen = mobileMenu?.classList.contains('menu-open');
+    isOpen ? closeMenu() : openMenu();
+  });
+
+  mobileMenu?.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  // Active page highlighting
+  const currentPath = window.location.pathname;
+  document.querySelectorAll('.nav-link[data-page]').forEach(link => {
+    const href = link.getAttribute('href') || '';
+    if (currentPath === href || (currentPath.endsWith('/') && href === currentPath.slice(0, -1))) {
+      link.classList.add('active');
+    }
+  });
+</script>

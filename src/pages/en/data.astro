@@ -1,0 +1,260 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+
+export const prerender = false;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+---
+
+<Layout title={`${t('data.title')} — FinApp`}>
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <h1 class="text-2xl font-bold text-slate-100 mb-6 reveal">{t('data.title')}</h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Export -->
+      <div class="glass rounded-2xl p-6 reveal hover:border-emerald-500/20 transition-all" style="--reveal-delay: 100ms">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+            <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-lg font-semibold text-slate-200">{t('data.export')}</h2>
+            <p class="text-xs text-slate-500">{t('data.exportDesc')}</p>
+          </div>
+        </div>
+        <p class="text-xs text-slate-500 mb-4 font-mono bg-slate-800/50 rounded-lg p-2">{t('data.columns')}</p>
+        <button id="export-btn" class="w-full py-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 font-medium text-sm border border-emerald-500/20 hover:bg-emerald-500/20 transition-all">
+          {t('data.export')} (.xlsx)
+        </button>
+      </div>
+
+      <!-- Import -->
+      <div class="glass rounded-2xl p-6 reveal hover:border-cyan-500/20 transition-all" style="--reveal-delay: 200ms">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+            <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+            </svg>
+          </div>
+          <div>
+            <h2 class="text-lg font-semibold text-slate-200">{t('data.import')}</h2>
+            <p class="text-xs text-slate-500">{t('data.importDesc')}</p>
+          </div>
+        </div>
+        <label class="block w-full py-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 font-medium text-sm text-center border border-cyan-500/20 hover:bg-cyan-500/20 transition-all cursor-pointer">
+          <input type="file" id="import-file" accept=".xlsx,.xls" class="hidden" />
+          {t('data.import')} (.xlsx)
+        </label>
+      </div>
+    </div>
+
+    <!-- Import Preview -->
+    <div id="import-preview" class="hidden mt-6">
+      <div class="glass rounded-2xl p-6">
+        <h3 class="text-lg font-semibold text-slate-200 mb-4">{t('data.preview')}</h3>
+
+        <!-- Progress bar -->
+        <div id="import-progress" class="mb-4 hidden">
+          <div class="h-2 rounded-full bg-slate-800 overflow-hidden">
+            <div id="progress-bar" class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 transition-all duration-300" style="width: 0%"></div>
+          </div>
+          <p id="progress-text" class="text-xs text-slate-500 mt-1 text-center">{t('data.processing')}</p>
+        </div>
+
+        <!-- Errors -->
+        <div id="import-errors" class="hidden mb-4">
+          <h4 class="text-sm font-medium text-rose-400 mb-2">{t('data.errors')}</h4>
+          <div id="error-list" class="max-h-40 overflow-y-auto space-y-1 text-xs"></div>
+        </div>
+
+        <!-- Preview table -->
+        <div id="preview-table-container" class="overflow-x-auto mb-4">
+          <table class="w-full text-sm text-left">
+            <thead>
+              <tr class="border-b border-slate-700/50">
+                <th class="py-2 px-3 text-xs text-slate-500">Fecha</th>
+                <th class="py-2 px-3 text-xs text-slate-500">Tipo</th>
+                <th class="py-2 px-3 text-xs text-slate-500">Monto</th>
+                <th class="py-2 px-3 text-xs text-slate-500">Categoría</th>
+                <th class="py-2 px-3 text-xs text-slate-500">Entidad</th>
+                <th class="py-2 px-3 text-xs text-slate-500">Método</th>
+                <th class="py-2 px-3 text-xs text-slate-500">Notas</th>
+              </tr>
+            </thead>
+            <tbody id="preview-body"></tbody>
+          </table>
+        </div>
+
+        <div class="flex gap-3">
+          <button id="confirm-import" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-medium text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all">
+            {t('data.confirm')}
+          </button>
+          <button id="cancel-import" class="px-6 py-2.5 rounded-xl bg-white/5 border border-slate-700/50 text-slate-400 text-sm hover:text-slate-200 transition-colors">
+            {t('common.cancel')}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<script>
+  import { createClient } from '@supabase/supabase-js';
+  import * as XLSX from 'xlsx';
+
+  const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
+  const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
+
+  let parsedRows: any[] = [];
+
+  // Export
+  document.getElementById('export-btn')?.addEventListener('click', async () => {
+    if (!supabaseUrl || supabaseUrl === 'your_supabase_url_here') return;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    const btn = document.getElementById('export-btn') as HTMLButtonElement;
+    btn.disabled = true; btn.textContent = '...';
+
+    try {
+      const { data } = await supabase.from('transactions').select('*, categories(name)').order('date', { ascending: false });
+      if (!data || data.length === 0) { alert('No transactions'); return; }
+
+      const rows = data.map((t: any) => ({
+        Fecha: t.date,
+        Tipo: t.type === 'income' ? 'Ingreso' : 'Egreso',
+        Monto: t.amount,
+        Categoria: (t.categories as any)?.name || '',
+        Entidad: t.entity || '',
+        Cuenta: t.account || '',
+        Metodo: t.method || '',
+        Notas: t.notes || '',
+      }));
+
+      const ws = XLSX.utils.json_to_sheet(rows, { header: ['Fecha','Tipo','Monto','Categoria','Entidad','Cuenta','Metodo','Notas'] });
+      ws['!cols'] = [{ wch: 12 },{ wch: 10 },{ wch: 14 },{ wch: 18 },{ wch: 18 },{ wch: 14 },{ wch: 14 },{ wch: 30 }];
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Transacciones');
+      XLSX.writeFile(wb, `finapp_export_${new Date().toISOString().split('T')[0]}.xlsx`);
+    } catch (err: any) { alert(err.message); } finally { btn.disabled = false; btn.textContent = 'Exportar a Excel (.xlsx)'; }
+  });
+
+  // Import
+  document.getElementById('import-file')?.addEventListener('change', async (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0];
+    if (!file) return;
+
+    const preview = document.getElementById('import-preview');
+    const progressDiv = document.getElementById('import-progress');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    const errorsDiv = document.getElementById('import-errors');
+    const errorList = document.getElementById('error-list');
+    const previewBody = document.getElementById('preview-body');
+
+    preview?.classList.remove('hidden');
+    progressDiv?.classList.remove('hidden');
+
+    const buffer = await file.arrayBuffer();
+    const wb = XLSX.read(buffer, { type: 'array' });
+    const ws = wb.Sheets[wb.SheetNames[0]];
+    const rawRows: any[] = XLSX.utils.sheet_to_json(ws);
+
+    parsedRows = [];
+    const errors: { row: number; msg: string }[] = [];
+    const CHUNK = 100;
+    const fmt = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' });
+
+    for (let i = 0; i < rawRows.length; i += CHUNK) {
+      const chunk = rawRows.slice(i, i + CHUNK);
+      if (i > 0) await new Promise(r => setTimeout(r, 0));
+
+      chunk.forEach((raw, j) => {
+        const rowNum = i + j + 2;
+        const fecha = String(raw.Fecha || raw.fecha || '');
+        const tipo = String(raw.Tipo || raw.tipo || '');
+        const monto = Number(raw.Monto || raw.monto || 0);
+        const cat = String(raw.Categoria || raw.categoria || raw['Categoría'] || '');
+
+        if (!fecha || !tipo || !monto) {
+          errors.push({ row: rowNum, msg: 'Missing required fields' });
+          return;
+        }
+        parsedRows.push({
+          Fecha: fecha, Tipo: tipo, Monto: monto, Categoria: cat,
+          Entidad: String(raw.Entidad || raw.entidad || ''),
+          Cuenta: String(raw.Cuenta || raw.cuenta || ''),
+          Metodo: String(raw.Metodo || raw.metodo || raw['Método'] || 'cash'),
+          Notas: String(raw.Notas || raw.notas || ''),
+        });
+      });
+
+      const pct = Math.min(((i + CHUNK) / rawRows.length) * 100, 100);
+      if (progressBar) progressBar.style.width = `${pct}%`;
+      if (progressText) progressText.textContent = `${Math.round(pct)}%`;
+    }
+
+    progressDiv?.classList.add('hidden');
+
+    if (errors.length > 0) {
+      errorsDiv?.classList.remove('hidden');
+      if (errorList) errorList.innerHTML = errors.map(e => `<p class="text-rose-400">Row ${e.row}: ${e.msg}</p>`).join('');
+    }
+
+    if (previewBody) {
+      previewBody.innerHTML = parsedRows.slice(0, 20).map(r => `
+        <tr class="border-b border-slate-800/30">
+          <td class="py-2 px-3 text-slate-300">${r.Fecha}</td>
+          <td class="py-2 px-3 ${r.Tipo === 'Ingreso' ? 'text-emerald-400' : 'text-rose-400'}">${r.Tipo}</td>
+          <td class="py-2 px-3 text-slate-300">${fmt.format(r.Monto)}</td>
+          <td class="py-2 px-3 text-slate-300">${r.Categoria}</td>
+          <td class="py-2 px-3 text-slate-500">${r.Entidad}</td>
+          <td class="py-2 px-3 text-slate-500">${r.Metodo}</td>
+          <td class="py-2 px-3 text-slate-500">${r.Notas}</td>
+        </tr>
+      `).join('');
+      if (parsedRows.length > 20) {
+        previewBody.innerHTML += `<tr><td colspan="7" class="py-2 px-3 text-center text-slate-500 text-xs">... +${parsedRows.length - 20} more rows</td></tr>`;
+      }
+    }
+  });
+
+  // Cancel import
+  document.getElementById('cancel-import')?.addEventListener('click', () => {
+    document.getElementById('import-preview')?.classList.add('hidden');
+    parsedRows = [];
+  });
+
+  // Confirm import
+  document.getElementById('confirm-import')?.addEventListener('click', async () => {
+    if (!supabaseUrl || supabaseUrl === 'your_supabase_url_here' || parsedRows.length === 0) return;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+    const confirmBtn = document.getElementById('confirm-import') as HTMLButtonElement;
+    confirmBtn.disabled = true; confirmBtn.textContent = '...';
+
+    try {
+      const txData = parsedRows.map(r => ({
+        type: r.Tipo === 'Ingreso' || r.Tipo === 'Income' ? 'income' : 'expense',
+        amount: r.Monto,
+        entity: r.Entidad,
+        account: r.Cuenta,
+        method: r.Metodo || 'cash',
+        notes: r.Notas,
+        date: r.Fecha,
+      }));
+
+      // Insert in batches of 100
+      for (let i = 0; i < txData.length; i += 100) {
+        const batch = txData.slice(i, i + 100);
+        const { error } = await supabase.from('transactions').insert(batch);
+        if (error) throw error;
+      }
+
+      alert(`${txData.length} transactions imported!`);
+      window.location.reload();
+    } catch (err: any) { alert(err.message); } finally { confirmBtn.disabled = false; }
+  });
+</script>
