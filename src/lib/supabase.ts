@@ -7,8 +7,8 @@ import type { Database } from "../types/supabase";
  * Uses process.env fallback for Vercel runtime where import.meta.env
  * may not resolve dashboard-configured env vars.
  */
-const supabaseUrl = import.meta.env.SUPABASE_URL ?? process.env.SUPABASE_URL ?? "";
-const supabaseKey = import.meta.env.SUPABASE_ANON_KEY ?? process.env.SUPABASE_ANON_KEY ?? "";
+const supabaseUrl = import.meta.env.SUPABASE_URL ?? "";
+const supabaseKey = import.meta.env.SUPABASE_ANON_KEY ?? "";
 
 if (!supabaseUrl || !supabaseKey) {
     console.error("[supabase] Missing SUPABASE_URL or SUPABASE_ANON_KEY env vars");

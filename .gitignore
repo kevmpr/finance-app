@@ -6,6 +6,7 @@ llms-full.txt
 
 # Build output
 dist/
+.vercel/
 
 # Environment variables (NEVER commit)
 .env
