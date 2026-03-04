@@ -1,5 +1,5 @@
 import { defineMiddleware } from 'astro:middleware';
-import { supabase, ensureProfile } from './lib/supabase';
+import { createServerClient, ensureProfile } from './lib/supabase';
 
 const protectedPrefixes = ['/es/', '/en/'];
 const publicSuffixes = ['/login'];
@@ -35,7 +35,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
         return context.redirect(`/${validLang}/login`);
     }
 
-    // ── Validate session ──
+    // ── Validate session using per-request SSR client ──
+    const supabase = createServerClient(context.cookies, context.request);
     const { data, error } = await supabase.auth.setSession({
         access_token: accessToken.value,
         refresh_token: refreshToken.value,

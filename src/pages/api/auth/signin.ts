@@ -1,7 +1,9 @@
 import type { APIRoute } from "astro";
-import { supabase } from "../../../lib/supabase";
+import { createServerClient } from "../../../lib/supabase";
 
-export const GET: APIRoute = async ({ request, redirect }) => {
+export const GET: APIRoute = async ({ request, cookies, redirect }) => {
+    const supabase = createServerClient(cookies, request);
+
     const { data, error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
