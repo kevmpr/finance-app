@@ -18,8 +18,9 @@ export const onRequest = defineMiddleware(async (context, next) => {
         return next();
     }
 
-    // Only protect locale routes (/es/*, /en/*)
-    const isProtected = protectedPrefixes.some((p) => pathname.startsWith(p));
+    // Only protect locale routes (/es/*, /en/*) and API data routes
+    const isProtected = protectedPrefixes.some((p) => pathname.startsWith(p))
+        || (pathname.startsWith('/api/') && !publicPaths.includes(pathname));
     if (!isProtected) {
         return next();
     }

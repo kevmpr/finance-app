@@ -1,11 +1,20 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { createServerClient } from '../../lib/supabase';
 
 export const prerender = false;
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
+
+const supabase = createServerClient(Astro.cookies, Astro.request);
+
+// Server-side data fetch (RLS-aware)
+const { data: cats } = await supabase.from('categories').select('id, name, icon').order('name');
+const { data: txs } = await supabase.from('transactions').select('*, categories(name, icon)').order('date', { ascending: false }).limit(50);
+const categories = cats || [];
+const transactions = txs || [];
 ---
 
 <Layout title={`${t('tx.title')} — FinApp`}>
@@ -37,6 +46,7 @@ const t = useTranslations(lang);
         <label class="text-xs text-slate-400 dark:text-slate-500 block mb-1">{t('tx.category')}</label>
         <select id="filter-category" class="px-3 py-2 rounded-lg bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 text-sm outline-none focus:border-emerald-500/50 appearance-none">
           <option value="">{t('tx.all')}</option>
+          {categories.map((c: any) => (<option value={c.id}>{c.icon} {c.name}</option>))}
         </select>
       </div>
     </div>
@@ -51,9 +61,39 @@ const t = useTranslations(lang);
 
     <!-- Transaction List -->
     <div id="transaction-list" class="space-y-2">
-      <div class="glass rounded-2xl p-8 text-center text-slate-400 dark:text-slate-500 reveal" style="--reveal-delay: 200ms">
-        {t('tx.noTransactions')}
-      </div>
+      {transactions.length === 0 ? (
+        <div class="glass rounded-2xl p-8 text-center text-slate-400 dark:text-slate-500 reveal" style="--reveal-delay: 200ms">
+          {t('tx.noTransactions')}
+        </div>
+      ) : (
+        transactions.map((tx: any) => {
+          const fmt = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' });
+          return (
+            <div class="glass rounded-xl p-4 flex items-center justify-between hover:border-slate-300 dark:hover:border-slate-600/50 transition-all" data-tx-id={tx.id}>
+              <div class="flex items-center gap-3">
+                <span class="text-xl">{tx.categories?.icon || '📁'}</span>
+                <div>
+                  <p class="text-sm font-medium text-slate-700 dark:text-slate-200">{tx.categories?.name || ''}</p>
+                  <p class="text-xs text-slate-400 dark:text-slate-500">{tx.date}{tx.entity ? ' · ' + tx.entity : ''}{tx.notes ? ' · ' + tx.notes : ''}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class={`font-semibold ${tx.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}`}>
+                  {tx.type === 'income' ? '+' : '-'}{fmt.format(tx.amount)}
+                </span>
+                <div class="flex gap-1">
+                  <button class="edit-tx-btn p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors" data-id={tx.id}>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                  </button>
+                  <button class="delete-tx-btn p-1.5 rounded-lg hover:bg-rose-500/10 text-slate-400 dark:text-slate-500 hover:text-rose-500 dark:hover:text-rose-400 transition-colors" data-id={tx.id}>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          );
+        })
+      )}
     </div>
 
     <!-- Pagination -->
@@ -93,7 +133,10 @@ const t = useTranslations(lang);
           <div class="grid grid-cols-2 gap-3">
             <div>
               <label class="text-sm text-slate-500 dark:text-slate-400 mb-1 block">{t('tx.category')}</label>
-              <select name="category_id" id="form-category" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-800 dark:text-slate-100 focus:border-emerald-500/50 outline-none appearance-none"><option value="">...</option></select>
+              <select name="category_id" id="form-category" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-800 dark:text-slate-100 focus:border-emerald-500/50 outline-none appearance-none">
+              <option value="">...</option>
+              {categories.map((c: any) => (<option value={c.id}>{c.icon} {c.name}</option>))}
+            </select>
             </div>
             <div>
               <label class="text-sm text-slate-500 dark:text-slate-400 mb-1 block">{t('tx.date')}</label>
@@ -142,14 +185,6 @@ const t = useTranslations(lang);
 </Layout>
 
 <script>
-  import { createClient } from '@supabase/supabase-js';
-
-  const supabaseUrl = import.meta.env.PUBLIC_SUPABASE_URL;
-  const supabaseKey = import.meta.env.PUBLIC_SUPABASE_ANON_KEY;
-  if (!supabaseUrl || supabaseUrl === 'your_supabase_url_here') {
-    console.warn('Supabase not configured');
-  }
-
   const modal = document.getElementById('tx-modal');
   const form = document.getElementById('tx-form') as HTMLFormElement;
   const amountInput = document.getElementById('form-amount') as HTMLInputElement;
@@ -158,21 +193,9 @@ const t = useTranslations(lang);
   const methodInput = document.getElementById('form-method') as HTMLInputElement;
   const today = new Date().toISOString().split('T')[0];
 
-  // Open modal
-  function openFormModal(editData?: any) {
+  function openFormModal() {
     modal?.classList.remove('hidden');
     if (dateInput) dateInput.value = today;
-    if (editData) {
-      (document.getElementById('form-id') as HTMLInputElement).value = editData.id;
-      amountInput.value = editData.amount;
-      dateInput.value = editData.date;
-      typeInput.value = editData.type;
-      methodInput.value = editData.method;
-      (document.getElementById('form-entity') as HTMLInputElement).value = editData.entity || '';
-      (document.getElementById('form-account') as HTMLInputElement).value = editData.account || '';
-      (document.getElementById('form-installments') as HTMLInputElement).value = editData.installments || '1';
-      (document.getElementById('form-notes') as HTMLTextAreaElement).value = editData.notes || '';
-    }
     setTimeout(() => amountInput?.focus(), 100);
   }
 
@@ -209,103 +232,45 @@ const t = useTranslations(lang);
     });
   });
 
-  // Copy previous expense
-  document.getElementById('copy-btn')?.addEventListener('click', async () => {
-    if (!supabaseUrl || supabaseUrl === 'your_supabase_url_here') return;
-    const supabase = createClient(supabaseUrl, supabaseKey);
-    const { data } = await supabase.from('transactions').select('*').eq('type', 'expense').order('date', { ascending: false }).limit(1).single();
-    if (data) {
-      openFormModal({ ...data, id: '' });
-      if (dateInput) { dateInput.value = today; dateInput.focus(); }
-    }
-  });
-
-  // Submit
+  // Submit via JSON API
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
-    if (!supabaseUrl || supabaseUrl === 'your_supabase_url_here') return;
-    const supabase = createClient(supabaseUrl, supabaseKey);
     const saveBtn = document.getElementById('form-save') as HTMLButtonElement;
     saveBtn.disabled = true;
-
     try {
       const fd = new FormData(form);
-      const payload = { type: fd.get('type'), amount: parseFloat(fd.get('amount') as string), category_id: fd.get('category_id') || null, entity: fd.get('entity') || '', account: fd.get('account') || '', method: fd.get('method'), installments: parseInt(fd.get('installments') as string) || 1, date: fd.get('date'), notes: fd.get('notes') || '' };
-      const id = fd.get('id') as string;
-
-      if (id) {
-        const { error } = await supabase.from('transactions').update(payload).eq('id', id);
-        if (error) throw error;
-      } else {
-        const { error } = await supabase.from('transactions').insert(payload);
-        if (error) throw error;
+      const payload = {
+        type: fd.get('type'),
+        amount: fd.get('amount'),
+        category_id: fd.get('category_id') || null,
+        entity: fd.get('entity') || '',
+        account: fd.get('account') || '',
+        method: fd.get('method'),
+        installments: fd.get('installments') || '1',
+        date: fd.get('date'),
+        notes: fd.get('notes') || '',
+      };
+      const res = await fetch('/api/transactions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || 'Error');
       }
       closeFormModal();
       window.location.reload();
     } catch (err: any) { alert(err.message); } finally { saveBtn.disabled = false; }
   });
 
-  // Load transactions
-  async function loadTransactions() {
-    if (!supabaseUrl || supabaseUrl === 'your_supabase_url_here') return;
-    const supabase = createClient(supabaseUrl, supabaseKey);
-    const fmt = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' });
-
-    try {
-      const { data: cats } = await supabase.from('categories').select('id, name, icon').order('name');
-      const filterCat = document.getElementById('filter-category') as HTMLSelectElement;
-      const formCat = document.getElementById('form-category') as HTMLSelectElement;
-      if (cats) {
-        const opts = cats.map((c: any) => `<option value="${c.id}">${c.icon} ${c.name}</option>`).join('');
-        if (filterCat) filterCat.innerHTML = '<option value="">All</option>' + opts;
-        if (formCat) formCat.innerHTML = '<option value="">...</option>' + opts;
-      }
-
-      const { data: txs } = await supabase.from('transactions').select('*, categories(name, icon)').order('date', { ascending: false }).limit(50);
-      const container = document.getElementById('transaction-list');
-      if (container && txs && txs.length > 0) {
-        container.innerHTML = txs.map((t: any) => `
-          <div class="glass rounded-xl p-4 flex items-center justify-between hover:border-slate-300 dark:hover:border-slate-600/50 transition-all">
-            <div class="flex items-center gap-3">
-              <span class="text-xl">${(t.categories as any)?.icon || '📁'}</span>
-              <div>
-                <p class="text-sm font-medium text-slate-700 dark:text-slate-200">${(t.categories as any)?.name || ''}</p>
-                <p class="text-xs text-slate-400 dark:text-slate-500">${t.date}${t.entity ? ' · ' + t.entity : ''}${t.notes ? ' · ' + t.notes : ''}</p>
-              </div>
-            </div>
-            <div class="flex items-center gap-3">
-              <span class="font-semibold ${t.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">
-                ${t.type === 'income' ? '+' : '-'}${fmt.format(t.amount)}
-              </span>
-              <div class="flex gap-1">
-                <button onclick="window.__editTx('${t.id}')" class="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
-                </button>
-                <button onclick="window.__deleteTx('${t.id}')" class="p-1.5 rounded-lg hover:bg-rose-500/10 text-slate-400 dark:text-slate-500 hover:text-rose-500 dark:hover:text-rose-400 transition-colors">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
-                </button>
-              </div>
-            </div>
-          </div>
-        `).join('');
-      }
-    } catch (err) { console.error(err); }
-  }
-
-  // Global handlers for edit/delete
-  (window as any).__editTx = async (id: string) => {
-    if (!supabaseUrl || supabaseUrl === 'your_supabase_url_here') return;
-    const supabase = createClient(supabaseUrl, supabaseKey);
-    const { data } = await supabase.from('transactions').select('*').eq('id', id).single();
-    if (data) openFormModal(data);
-  };
-  (window as any).__deleteTx = async (id: string) => {
-    if (!confirm('Delete?')) return;
-    if (!supabaseUrl || supabaseUrl === 'your_supabase_url_here') return;
-    const supabase = createClient(supabaseUrl, supabaseKey);
-    await supabase.from('transactions').delete().eq('id', id);
-    window.location.reload();
-  };
-
-  loadTransactions();
+  // Delete via API
+  document.querySelectorAll('.delete-tx-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      if (!confirm('¿Eliminar?')) return;
+      const id = (btn as HTMLElement).dataset.id;
+      await fetch(`/api/transactions?id=${id}`, { method: 'DELETE' });
+      window.location.reload();
+    });
+  });
 </script>

@@ -1,7 +1,7 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import { getLangFromUrl, useTranslations } from '../../i18n/utils';
-import { supabase } from '../../lib/supabase';
+import { createServerClient } from '../../lib/supabase';
 
 export const prerender = false;
 
@@ -9,6 +9,8 @@ const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const user = Astro.locals.user;
 const firstName = user?.user_metadata?.full_name?.split(' ')[0] || user?.email?.split('@')[0] || '';
+
+const supabase = createServerClient(Astro.cookies, Astro.request);
 
 // Fetch current month data server-side
 const now = new Date();
@@ -248,17 +250,29 @@ const recent = txs.slice(0, 5);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
   document.addEventListener('keydown', (e) => { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && !modal?.classList.contains('hidden')) form?.requestSubmit(); });
 
-  // Submit via fetch to avoid CSRF block on Vercel
+  // Submit via fetch JSON to avoid CSRF block on Vercel
   form?.addEventListener('submit', async (e) => {
     e.preventDefault();
     const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
     submitBtn.disabled = true;
     try {
-      const formData = new FormData(form);
-      const res = await fetch('/api/transactions', { method: 'POST', body: formData });
+      const fd = new FormData(form);
+      const payload = {
+        type: fd.get('type'),
+        amount: fd.get('amount'),
+        category_id: fd.get('category_id') || null,
+        method: fd.get('method'),
+        date: fd.get('date'),
+        notes: fd.get('notes') || '',
+      };
+      const res = await fetch('/api/transactions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
       if (!res.ok) {
-        const msg = await res.text();
-        throw new Error(msg || 'Error saving transaction');
+        const data = await res.json();
+        throw new Error(data.error || 'Error saving transaction');
       }
       closeModal();
       window.location.reload();
