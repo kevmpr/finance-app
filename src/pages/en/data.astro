@@ -10,24 +10,24 @@ const t = useTranslations(lang);
 
 <Layout title={`${t('data.title')} — FinApp`}>
   <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <h1 class="text-2xl font-bold text-slate-100 mb-6 reveal">{t('data.title')}</h1>
+    <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100 mb-6 reveal">{t('data.title')}</h1>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Export -->
       <div class="glass rounded-2xl p-6 reveal hover:border-emerald-500/20 transition-all" style="--reveal-delay: 100ms">
         <div class="flex items-center gap-3 mb-4">
           <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center">
-            <svg class="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-6 h-6 text-emerald-500 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
             </svg>
           </div>
           <div>
-            <h2 class="text-lg font-semibold text-slate-200">{t('data.export')}</h2>
-            <p class="text-xs text-slate-500">{t('data.exportDesc')}</p>
+            <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-200">{t('data.export')}</h2>
+            <p class="text-xs text-slate-400 dark:text-slate-500">{t('data.exportDesc')}</p>
           </div>
         </div>
-        <p class="text-xs text-slate-500 mb-4 font-mono bg-slate-800/50 rounded-lg p-2">{t('data.columns')}</p>
-        <button id="export-btn" class="w-full py-2.5 rounded-xl bg-emerald-500/10 text-emerald-400 font-medium text-sm border border-emerald-500/20 hover:bg-emerald-500/20 transition-all">
+        <p class="text-xs text-slate-400 dark:text-slate-500 mb-4 font-mono bg-slate-100 dark:bg-slate-800/50 rounded-lg p-2">{t('data.columns')}</p>
+        <button id="export-btn" class="w-full py-2.5 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-medium text-sm border border-emerald-500/20 hover:bg-emerald-500/20 transition-all">
           {t('data.export')} (.xlsx)
         </button>
       </div>
@@ -36,16 +36,16 @@ const t = useTranslations(lang);
       <div class="glass rounded-2xl p-6 reveal hover:border-cyan-500/20 transition-all" style="--reveal-delay: 200ms">
         <div class="flex items-center gap-3 mb-4">
           <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
-            <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-6 h-6 text-cyan-500 dark:text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
             </svg>
           </div>
           <div>
-            <h2 class="text-lg font-semibold text-slate-200">{t('data.import')}</h2>
-            <p class="text-xs text-slate-500">{t('data.importDesc')}</p>
+            <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-200">{t('data.import')}</h2>
+            <p class="text-xs text-slate-400 dark:text-slate-500">{t('data.importDesc')}</p>
           </div>
         </div>
-        <label class="block w-full py-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 font-medium text-sm text-center border border-cyan-500/20 hover:bg-cyan-500/20 transition-all cursor-pointer">
+        <label class="block w-full py-2.5 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 font-medium text-sm text-center border border-cyan-500/20 hover:bg-cyan-500/20 transition-all cursor-pointer">
           <input type="file" id="import-file" accept=".xlsx,.xls" class="hidden" />
           {t('data.import')} (.xlsx)
         </label>
@@ -55,19 +55,19 @@ const t = useTranslations(lang);
     <!-- Import Preview -->
     <div id="import-preview" class="hidden mt-6">
       <div class="glass rounded-2xl p-6">
-        <h3 class="text-lg font-semibold text-slate-200 mb-4">{t('data.preview')}</h3>
+        <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-200 mb-4">{t('data.preview')}</h3>
 
         <!-- Progress bar -->
         <div id="import-progress" class="mb-4 hidden">
-          <div class="h-2 rounded-full bg-slate-800 overflow-hidden">
+          <div class="h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
             <div id="progress-bar" class="h-full rounded-full bg-gradient-to-r from-emerald-500 to-cyan-500 transition-all duration-300" style="width: 0%"></div>
           </div>
-          <p id="progress-text" class="text-xs text-slate-500 mt-1 text-center">{t('data.processing')}</p>
+          <p id="progress-text" class="text-xs text-slate-400 dark:text-slate-500 mt-1 text-center">{t('data.processing')}</p>
         </div>
 
         <!-- Errors -->
         <div id="import-errors" class="hidden mb-4">
-          <h4 class="text-sm font-medium text-rose-400 mb-2">{t('data.errors')}</h4>
+          <h4 class="text-sm font-medium text-rose-600 dark:text-rose-400 mb-2">{t('data.errors')}</h4>
           <div id="error-list" class="max-h-40 overflow-y-auto space-y-1 text-xs"></div>
         </div>
 
@@ -75,14 +75,14 @@ const t = useTranslations(lang);
         <div id="preview-table-container" class="overflow-x-auto mb-4">
           <table class="w-full text-sm text-left">
             <thead>
-              <tr class="border-b border-slate-700/50">
-                <th class="py-2 px-3 text-xs text-slate-500">Fecha</th>
-                <th class="py-2 px-3 text-xs text-slate-500">Tipo</th>
-                <th class="py-2 px-3 text-xs text-slate-500">Monto</th>
-                <th class="py-2 px-3 text-xs text-slate-500">Categoría</th>
-                <th class="py-2 px-3 text-xs text-slate-500">Entidad</th>
-                <th class="py-2 px-3 text-xs text-slate-500">Método</th>
-                <th class="py-2 px-3 text-xs text-slate-500">Notas</th>
+              <tr class="border-b border-slate-200 dark:border-slate-700/50">
+                <th class="py-2 px-3 text-xs text-slate-400 dark:text-slate-500">Fecha</th>
+                <th class="py-2 px-3 text-xs text-slate-400 dark:text-slate-500">Tipo</th>
+                <th class="py-2 px-3 text-xs text-slate-400 dark:text-slate-500">Monto</th>
+                <th class="py-2 px-3 text-xs text-slate-400 dark:text-slate-500">Categoría</th>
+                <th class="py-2 px-3 text-xs text-slate-400 dark:text-slate-500">Entidad</th>
+                <th class="py-2 px-3 text-xs text-slate-400 dark:text-slate-500">Método</th>
+                <th class="py-2 px-3 text-xs text-slate-400 dark:text-slate-500">Notas</th>
               </tr>
             </thead>
             <tbody id="preview-body"></tbody>
@@ -93,7 +93,7 @@ const t = useTranslations(lang);
           <button id="confirm-import" class="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-medium text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all">
             {t('data.confirm')}
           </button>
-          <button id="cancel-import" class="px-6 py-2.5 rounded-xl bg-white/5 border border-slate-700/50 text-slate-400 text-sm hover:text-slate-200 transition-colors">
+          <button id="cancel-import" class="px-6 py-2.5 rounded-xl bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-500 dark:text-slate-400 text-sm hover:text-slate-700 dark:hover:text-slate-200 transition-colors">
             {t('common.cancel')}
           </button>
         </div>
@@ -201,23 +201,23 @@ const t = useTranslations(lang);
 
     if (errors.length > 0) {
       errorsDiv?.classList.remove('hidden');
-      if (errorList) errorList.innerHTML = errors.map(e => `<p class="text-rose-400">Row ${e.row}: ${e.msg}</p>`).join('');
+      if (errorList) errorList.innerHTML = errors.map(e => `<p class="text-rose-600 dark:text-rose-400">Row ${e.row}: ${e.msg}</p>`).join('');
     }
 
     if (previewBody) {
       previewBody.innerHTML = parsedRows.slice(0, 20).map(r => `
-        <tr class="border-b border-slate-800/30">
-          <td class="py-2 px-3 text-slate-300">${r.Fecha}</td>
-          <td class="py-2 px-3 ${r.Tipo === 'Ingreso' ? 'text-emerald-400' : 'text-rose-400'}">${r.Tipo}</td>
-          <td class="py-2 px-3 text-slate-300">${fmt.format(r.Monto)}</td>
-          <td class="py-2 px-3 text-slate-300">${r.Categoria}</td>
-          <td class="py-2 px-3 text-slate-500">${r.Entidad}</td>
-          <td class="py-2 px-3 text-slate-500">${r.Metodo}</td>
-          <td class="py-2 px-3 text-slate-500">${r.Notas}</td>
+        <tr class="border-b border-slate-100 dark:border-slate-800/30">
+          <td class="py-2 px-3 text-slate-600 dark:text-slate-300">${r.Fecha}</td>
+          <td class="py-2 px-3 ${r.Tipo === 'Ingreso' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">${r.Tipo}</td>
+          <td class="py-2 px-3 text-slate-600 dark:text-slate-300">${fmt.format(r.Monto)}</td>
+          <td class="py-2 px-3 text-slate-600 dark:text-slate-300">${r.Categoria}</td>
+          <td class="py-2 px-3 text-slate-400 dark:text-slate-500">${r.Entidad}</td>
+          <td class="py-2 px-3 text-slate-400 dark:text-slate-500">${r.Metodo}</td>
+          <td class="py-2 px-3 text-slate-400 dark:text-slate-500">${r.Notas}</td>
         </tr>
       `).join('');
       if (parsedRows.length > 20) {
-        previewBody.innerHTML += `<tr><td colspan="7" class="py-2 px-3 text-center text-slate-500 text-xs">... +${parsedRows.length - 20} more rows</td></tr>`;
+        previewBody.innerHTML += `<tr><td colspan="7" class="py-2 px-3 text-center text-slate-400 dark:text-slate-500 text-xs">... +${parsedRows.length - 20} more rows</td></tr>`;
       }
     }
   });
@@ -246,7 +246,6 @@ const t = useTranslations(lang);
         date: r.Fecha,
       }));
 
-      // Insert in batches of 100
       for (let i = 0; i < txData.length; i += 100) {
         const batch = txData.slice(i, i + 100);
         const { error } = await supabase.from('transactions').insert(batch);

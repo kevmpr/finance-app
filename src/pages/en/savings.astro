@@ -12,7 +12,7 @@ const t = useTranslations(lang);
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Header -->
     <div class="flex items-center justify-between mb-6 reveal">
-      <h1 class="text-2xl font-bold text-slate-100">{t('sav.title')}</h1>
+      <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">{t('sav.title')}</h1>
       <button id="add-goal-btn" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-medium text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all flex items-center gap-2">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
         {t('sav.add')}
@@ -21,30 +21,30 @@ const t = useTranslations(lang);
 
     <!-- 50/30/20 Rule Suggestion -->
     <div class="glass rounded-2xl p-6 mb-6 reveal" style="--reveal-delay: 100ms">
-      <h2 class="text-lg font-semibold text-slate-200 mb-4 flex items-center gap-2">
-        <svg class="w-5 h-5 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+      <h2 class="text-lg font-semibold text-slate-700 dark:text-slate-200 mb-4 flex items-center gap-2">
+        <svg class="w-5 h-5 text-amber-500 dark:text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
         {t('sav.suggestion')}
       </h2>
       <div id="rule-container" class="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <div class="rounded-xl bg-emerald-500/5 border border-emerald-500/10 p-4 text-center">
-          <p class="text-xs text-slate-500 mb-1">{t('sav.needs')}</p>
-          <p id="rule-needs" class="text-xl font-bold text-emerald-400">$0</p>
+          <p class="text-xs text-slate-400 dark:text-slate-500 mb-1">{t('sav.needs')}</p>
+          <p id="rule-needs" class="text-xl font-bold text-emerald-600 dark:text-emerald-400">$0</p>
         </div>
         <div class="rounded-xl bg-cyan-500/5 border border-cyan-500/10 p-4 text-center">
-          <p class="text-xs text-slate-500 mb-1">{t('sav.wants')}</p>
-          <p id="rule-wants" class="text-xl font-bold text-cyan-400">$0</p>
+          <p class="text-xs text-slate-400 dark:text-slate-500 mb-1">{t('sav.wants')}</p>
+          <p id="rule-wants" class="text-xl font-bold text-cyan-600 dark:text-cyan-400">$0</p>
         </div>
         <div class="rounded-xl bg-amber-500/5 border border-amber-500/10 p-4 text-center">
-          <p class="text-xs text-slate-500 mb-1">{t('sav.savingsLabel')}</p>
-          <p id="rule-savings" class="text-xl font-bold text-amber-400">$0</p>
+          <p class="text-xs text-slate-400 dark:text-slate-500 mb-1">{t('sav.savingsLabel')}</p>
+          <p id="rule-savings" class="text-xl font-bold text-amber-600 dark:text-amber-400">$0</p>
         </div>
       </div>
-      <p id="rule-based" class="text-xs text-slate-500 mt-3 text-center"></p>
+      <p id="rule-based" class="text-xs text-slate-400 dark:text-slate-500 mt-3 text-center"></p>
     </div>
 
     <!-- Goals Grid -->
     <div id="goals-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-      <div class="glass rounded-2xl p-8 text-center text-slate-500 col-span-full reveal" style="--reveal-delay: 200ms">
+      <div class="glass rounded-2xl p-8 text-center text-slate-400 dark:text-slate-500 col-span-full reveal" style="--reveal-delay: 200ms">
         {t('sav.noGoals')}
       </div>
     </div>
@@ -52,34 +52,34 @@ const t = useTranslations(lang);
 
   <!-- Goal Form Modal -->
   <div id="goal-modal" class="fixed inset-0 z-50 hidden">
-    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" id="goal-backdrop"></div>
+    <div class="absolute inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm" id="goal-backdrop"></div>
     <div class="absolute bottom-0 left-0 right-0 sm:bottom-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:max-w-md sm:w-full">
       <div class="glass rounded-t-2xl sm:rounded-2xl p-6 animate-slide-up">
         <div class="flex items-center justify-between mb-6">
-          <h3 class="text-lg font-semibold text-slate-200">{t('sav.add')}</h3>
-          <button id="goal-close" class="p-1 rounded-lg hover:bg-slate-700/50 text-slate-400">
+          <h3 class="text-lg font-semibold text-slate-700 dark:text-slate-200">{t('sav.add')}</h3>
+          <button id="goal-close" class="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50 text-slate-400">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
           </button>
         </div>
         <form id="goal-form" class="space-y-4">
           <input type="hidden" name="id" id="goal-id" />
           <div>
-            <label class="text-sm text-slate-400 mb-1 block">{t('sav.name')}</label>
-            <input type="text" name="name" id="goal-name" required maxlength="100" class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-slate-700/50 text-slate-100 placeholder-slate-600 focus:border-emerald-500/50 outline-none" />
+            <label class="text-sm text-slate-500 dark:text-slate-400 mb-1 block">{t('sav.name')}</label>
+            <input type="text" name="name" id="goal-name" required maxlength="100" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 focus:border-emerald-500/50 outline-none" />
           </div>
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="text-sm text-slate-400 mb-1 block">{t('sav.target')}</label>
-              <input type="number" name="target_amount" id="goal-target" step="0.01" min="0" required class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-slate-700/50 text-slate-100 focus:border-emerald-500/50 outline-none" />
+              <label class="text-sm text-slate-500 dark:text-slate-400 mb-1 block">{t('sav.target')}</label>
+              <input type="number" name="target_amount" id="goal-target" step="0.01" min="0" required class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-800 dark:text-slate-100 focus:border-emerald-500/50 outline-none" />
             </div>
             <div>
-              <label class="text-sm text-slate-400 mb-1 block">{t('sav.current')}</label>
-              <input type="number" name="current_amount" id="goal-current" step="0.01" min="0" value="0" class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-slate-700/50 text-slate-100 focus:border-emerald-500/50 outline-none" />
+              <label class="text-sm text-slate-500 dark:text-slate-400 mb-1 block">{t('sav.current')}</label>
+              <input type="number" name="current_amount" id="goal-current" step="0.01" min="0" value="0" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-800 dark:text-slate-100 focus:border-emerald-500/50 outline-none" />
             </div>
           </div>
           <div>
-            <label class="text-sm text-slate-400 mb-1 block">{t('sav.deadline')}</label>
-            <input type="date" name="deadline" id="goal-deadline" class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-slate-700/50 text-slate-100 focus:border-emerald-500/50 outline-none" />
+            <label class="text-sm text-slate-500 dark:text-slate-400 mb-1 block">{t('sav.deadline')}</label>
+            <input type="date" name="deadline" id="goal-deadline" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-800 dark:text-slate-100 focus:border-emerald-500/50 outline-none" />
           </div>
           <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-semibold hover:shadow-lg hover:shadow-emerald-500/25 transition-all">{t('common.save')}</button>
         </form>
@@ -141,7 +141,6 @@ const t = useTranslations(lang);
     const fmt = new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' });
 
     try {
-      // 50/30/20 rule based on this month's income
       const now = new Date();
       const start = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-01`;
       const end = new Date(now.getFullYear(), now.getMonth()+1, 0).toISOString().split('T')[0];
@@ -156,7 +155,6 @@ const t = useTranslations(lang);
       if (savingsEl) savingsEl.textContent = fmt.format(monthlyIncome * 0.2);
       if (basedEl && monthlyIncome > 0) basedEl.textContent = `Basado en ingresos de ${fmt.format(monthlyIncome)}`;
 
-      // Goals
       const { data: goals } = await supabase.from('savings_goals').select('*').order('created_at', { ascending: false });
       const container = document.getElementById('goals-container');
       if (container && goals && goals.length > 0) {
@@ -166,26 +164,26 @@ const t = useTranslations(lang);
           return `
             <div class="glass rounded-2xl p-5 hover:border-${color}-500/30 transition-all duration-300 group">
               <div class="flex items-center justify-between mb-3">
-                <h3 class="font-semibold text-slate-200">${g.name}</h3>
+                <h3 class="font-semibold text-slate-700 dark:text-slate-200">${g.name}</h3>
                 <div class="flex gap-1">
-                  <button onclick="window.__editGoal('${g.id}')" class="p-1.5 rounded-lg hover:bg-slate-700/50 text-slate-500 hover:text-slate-300 opacity-0 group-hover:opacity-100 transition-all">
+                  <button onclick="window.__editGoal('${g.id}')" class="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 opacity-0 group-hover:opacity-100 transition-all">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                   </button>
-                  <button onclick="window.__deleteGoal('${g.id}')" class="p-1.5 rounded-lg hover:bg-rose-500/10 text-slate-500 hover:text-rose-400 opacity-0 group-hover:opacity-100 transition-all">
+                  <button onclick="window.__deleteGoal('${g.id}')" class="p-1.5 rounded-lg hover:bg-rose-500/10 text-slate-400 dark:text-slate-500 hover:text-rose-500 dark:hover:text-rose-400 opacity-0 group-hover:opacity-100 transition-all">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                   </button>
                 </div>
               </div>
               <div class="mb-2">
-                <div class="flex justify-between text-xs text-slate-500 mb-1">
+                <div class="flex justify-between text-xs text-slate-400 dark:text-slate-500 mb-1">
                   <span>${fmt.format(g.current_amount)}</span>
                   <span>${fmt.format(g.target_amount)}</span>
                 </div>
-                <div class="h-2 rounded-full bg-slate-800 overflow-hidden">
+                <div class="h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
                   <div class="h-full rounded-full bg-gradient-to-r from-${color}-500 to-${color}-400 transition-all duration-500" style="width: ${pct}%"></div>
                 </div>
               </div>
-              <p class="text-xs text-slate-500">${pct.toFixed(1)}% ${g.deadline ? '· ' + g.deadline : ''}</p>
+              <p class="text-xs text-slate-400 dark:text-slate-500">${pct.toFixed(1)}% ${g.deadline ? '· ' + g.deadline : ''}</p>
             </div>
           `;
         }).join('');

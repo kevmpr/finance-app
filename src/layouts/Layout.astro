@@ -27,8 +27,8 @@ const lang = getLangFromUrl(Astro.url);
       /* Critical CSS — inlined to eliminate render-blocking */
       *,*::before,*::after{box-sizing:border-box;border-width:0;border-style:solid}
       html{line-height:1.5;-webkit-text-size-adjust:100%;tab-size:4;font-family:Inter,system-ui,sans-serif;scroll-behavior:smooth;scroll-padding-top:5rem}
-      body{margin:0;line-height:inherit;min-height:100vh;contain:style;background-color:#020617;color:#f1f5f9}
-      .dark body,html.dark body{background-color:#020617;color:#f1f5f9}
+      body{margin:0;line-height:inherit;min-height:100vh;contain:style;background-color:#ffffff;color:#0f172a}
+      html.dark body{background-color:#020617;color:#f1f5f9}
       img,svg,video{display:block;max-width:100%;height:auto}
       h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}
       a{color:inherit;text-decoration:inherit}
@@ -38,7 +38,7 @@ const lang = getLangFromUrl(Astro.url);
     </style>
     <title>{title}</title>
   </head>
-  <body class="bg-slate-950 text-slate-100 font-sans transition-colors duration-300 overflow-x-hidden">
+  <body class="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300 overflow-x-hidden">
     <Navbar />
     <main class="min-h-screen pt-16">
       <slot />
@@ -46,10 +46,11 @@ const lang = getLangFromUrl(Astro.url);
     <Footer />
 
     <script is:inline>
-      // Dark mode initialization - runs before paint
+      // Theme initialization - runs before paint
+      // Default is light mode
       (function() {
         const theme = localStorage.getItem('theme');
-        if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        if (theme === 'dark') {
           document.documentElement.classList.add('dark');
         } else {
           document.documentElement.classList.remove('dark');
@@ -99,18 +100,26 @@ const lang = getLangFromUrl(Astro.url);
     background: rgba(16, 185, 129, 0.5);
   }
 
-  /* Glassmorphism utility */
+  /* Glassmorphism utility — light default */
   .glass {
-    background: rgba(15, 23, 42, 0.6);
+    background: rgba(255, 255, 255, 0.7);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+  }
+  .dark .glass {
+    background: rgba(15, 23, 42, 0.6);
     border: 1px solid rgba(148, 163, 184, 0.1);
   }
 
   .glass-light {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(241, 245, 249, 0.6);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(148, 163, 184, 0.15);
+  }
+  .dark .glass-light {
+    background: rgba(255, 255, 255, 0.05);
     border: 1px solid rgba(148, 163, 184, 0.08);
   }
 

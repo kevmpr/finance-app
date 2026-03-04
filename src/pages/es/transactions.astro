@@ -12,7 +12,7 @@ const t = useTranslations(lang);
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <!-- Header -->
     <div class="flex items-center justify-between mb-6 reveal">
-      <h1 class="text-2xl font-bold text-slate-100">{t('tx.title')}</h1>
+      <h1 class="text-2xl font-bold text-slate-800 dark:text-slate-100">{t('tx.title')}</h1>
       <button id="add-tx-btn" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-medium text-sm hover:shadow-lg hover:shadow-emerald-500/25 transition-all flex items-center gap-2">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
         {t('tx.add')}
@@ -22,20 +22,20 @@ const t = useTranslations(lang);
     <!-- Filters -->
     <div class="glass rounded-2xl p-4 mb-6 reveal flex flex-wrap gap-3 items-center" style="--reveal-delay: 100ms">
       <div>
-        <label class="text-xs text-slate-500 block mb-1">{t('tx.type')}</label>
-        <select id="filter-type" class="px-3 py-2 rounded-lg bg-white/5 border border-slate-700/50 text-slate-200 text-sm outline-none focus:border-emerald-500/50 appearance-none">
+        <label class="text-xs text-slate-400 dark:text-slate-500 block mb-1">{t('tx.type')}</label>
+        <select id="filter-type" class="px-3 py-2 rounded-lg bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 text-sm outline-none focus:border-emerald-500/50 appearance-none">
           <option value="">{t('tx.all')}</option>
           <option value="income">{t('tx.income')}</option>
           <option value="expense">{t('tx.expense')}</option>
         </select>
       </div>
       <div>
-        <label class="text-xs text-slate-500 block mb-1">{t('tx.date')}</label>
-        <input type="month" id="filter-month" class="px-3 py-2 rounded-lg bg-white/5 border border-slate-700/50 text-slate-200 text-sm outline-none focus:border-emerald-500/50" />
+        <label class="text-xs text-slate-400 dark:text-slate-500 block mb-1">{t('tx.date')}</label>
+        <input type="month" id="filter-month" class="px-3 py-2 rounded-lg bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 text-sm outline-none focus:border-emerald-500/50" />
       </div>
       <div>
-        <label class="text-xs text-slate-500 block mb-1">{t('tx.category')}</label>
-        <select id="filter-category" class="px-3 py-2 rounded-lg bg-white/5 border border-slate-700/50 text-slate-200 text-sm outline-none focus:border-emerald-500/50 appearance-none">
+        <label class="text-xs text-slate-400 dark:text-slate-500 block mb-1">{t('tx.category')}</label>
+        <select id="filter-category" class="px-3 py-2 rounded-lg bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-700 dark:text-slate-200 text-sm outline-none focus:border-emerald-500/50 appearance-none">
           <option value="">{t('tx.all')}</option>
         </select>
       </div>
@@ -43,35 +43,35 @@ const t = useTranslations(lang);
 
     <!-- Copy previous expense -->
     <div class="mb-4 reveal" style="--reveal-delay: 150ms">
-      <button id="copy-btn" class="text-sm text-slate-400 hover:text-emerald-400 transition-colors flex items-center gap-2">
+      <button id="copy-btn" class="text-sm text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors flex items-center gap-2">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-        {t('tx.copy')} — <span class="text-xs text-slate-500">{t('tx.copyHint')}</span>
+        {t('tx.copy')} — <span class="text-xs text-slate-400 dark:text-slate-500">{t('tx.copyHint')}</span>
       </button>
     </div>
 
     <!-- Transaction List -->
     <div id="transaction-list" class="space-y-2">
-      <div class="glass rounded-2xl p-8 text-center text-slate-500 reveal" style="--reveal-delay: 200ms">
+      <div class="glass rounded-2xl p-8 text-center text-slate-400 dark:text-slate-500 reveal" style="--reveal-delay: 200ms">
         {t('tx.noTransactions')}
       </div>
     </div>
 
     <!-- Pagination -->
     <div id="pagination" class="flex items-center justify-center gap-2 mt-6 hidden">
-      <button id="prev-page" class="px-3 py-1.5 rounded-lg bg-white/5 border border-slate-700/50 text-slate-400 text-sm hover:text-emerald-400 transition-colors disabled:opacity-30">←</button>
-      <span id="page-info" class="text-sm text-slate-400"></span>
-      <button id="next-page" class="px-3 py-1.5 rounded-lg bg-white/5 border border-slate-700/50 text-slate-400 text-sm hover:text-emerald-400 transition-colors disabled:opacity-30">→</button>
+      <button id="prev-page" class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-500 dark:text-slate-400 text-sm hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors disabled:opacity-30">←</button>
+      <span id="page-info" class="text-sm text-slate-500 dark:text-slate-400"></span>
+      <button id="next-page" class="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-500 dark:text-slate-400 text-sm hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors disabled:opacity-30">→</button>
     </div>
   </div>
 
   <!-- Full Transaction Form Modal -->
   <div id="tx-modal" class="fixed inset-0 z-50 hidden">
-    <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" id="tx-modal-backdrop"></div>
+    <div class="absolute inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm" id="tx-modal-backdrop"></div>
     <div class="absolute bottom-0 left-0 right-0 sm:bottom-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:max-w-xl sm:w-full max-h-[90vh] overflow-y-auto">
       <div class="glass rounded-t-2xl sm:rounded-2xl p-6 animate-slide-up">
         <div class="flex items-center justify-between mb-6">
-          <h3 id="form-title" class="text-lg font-semibold text-slate-200">{t('tx.add')}</h3>
-          <button id="tx-modal-close" class="p-1 rounded-lg hover:bg-slate-700/50 text-slate-400">
+          <h3 id="form-title" class="text-lg font-semibold text-slate-700 dark:text-slate-200">{t('tx.add')}</h3>
+          <button id="tx-modal-close" class="p-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50 text-slate-400">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
           </button>
         </div>
@@ -80,61 +80,61 @@ const t = useTranslations(lang);
           <input type="hidden" name="id" id="form-id" />
 
           <div class="grid grid-cols-2 gap-2">
-            <button type="button" data-type="expense" class="form-type-btn active px-4 py-2.5 rounded-xl text-sm font-medium bg-rose-500/20 text-rose-400 border border-rose-500/30">{t('tx.expense')}</button>
-            <button type="button" data-type="income" class="form-type-btn px-4 py-2.5 rounded-xl text-sm font-medium bg-white/5 text-slate-400 border border-slate-700/50">{t('tx.income')}</button>
+            <button type="button" data-type="expense" class="form-type-btn active px-4 py-2.5 rounded-xl text-sm font-medium bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30">{t('tx.expense')}</button>
+            <button type="button" data-type="income" class="form-type-btn px-4 py-2.5 rounded-xl text-sm font-medium bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700/50">{t('tx.income')}</button>
           </div>
           <input type="hidden" name="type" value="expense" id="form-type" />
 
           <div>
-            <label class="text-sm text-slate-400 mb-1 block">{t('tx.amount')}</label>
-            <input type="number" name="amount" id="form-amount" step="0.01" min="0" required placeholder="0.00" class="w-full px-4 py-3 rounded-xl bg-white/5 border border-slate-700/50 text-slate-100 text-lg font-semibold placeholder-slate-600 focus:border-emerald-500/50 outline-none transition-all" />
+            <label class="text-sm text-slate-500 dark:text-slate-400 mb-1 block">{t('tx.amount')}</label>
+            <input type="number" name="amount" id="form-amount" step="0.01" min="0" required placeholder="0.00" class="w-full px-4 py-3 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-800 dark:text-slate-100 text-lg font-semibold placeholder-slate-400 dark:placeholder-slate-600 focus:border-emerald-500/50 outline-none transition-all" />
           </div>
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="text-sm text-slate-400 mb-1 block">{t('tx.category')}</label>
-              <select name="category_id" id="form-category" class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-slate-700/50 text-slate-100 focus:border-emerald-500/50 outline-none appearance-none"><option value="">...</option></select>
+              <label class="text-sm text-slate-500 dark:text-slate-400 mb-1 block">{t('tx.category')}</label>
+              <select name="category_id" id="form-category" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-800 dark:text-slate-100 focus:border-emerald-500/50 outline-none appearance-none"><option value="">...</option></select>
             </div>
             <div>
-              <label class="text-sm text-slate-400 mb-1 block">{t('tx.date')}</label>
-              <input type="date" name="date" id="form-date" required class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-slate-700/50 text-slate-100 focus:border-emerald-500/50 outline-none" />
+              <label class="text-sm text-slate-500 dark:text-slate-400 mb-1 block">{t('tx.date')}</label>
+              <input type="date" name="date" id="form-date" required class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-800 dark:text-slate-100 focus:border-emerald-500/50 outline-none" />
             </div>
           </div>
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="text-sm text-slate-400 mb-1 block">{t('tx.entity')}</label>
-              <input type="text" name="entity" id="form-entity" maxlength="100" class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-slate-700/50 text-slate-100 placeholder-slate-600 focus:border-emerald-500/50 outline-none" />
+              <label class="text-sm text-slate-500 dark:text-slate-400 mb-1 block">{t('tx.entity')}</label>
+              <input type="text" name="entity" id="form-entity" maxlength="100" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 focus:border-emerald-500/50 outline-none" />
             </div>
             <div>
-              <label class="text-sm text-slate-400 mb-1 block">{t('tx.account')}</label>
-              <input type="text" name="account" id="form-account" maxlength="100" class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-slate-700/50 text-slate-100 placeholder-slate-600 focus:border-emerald-500/50 outline-none" />
+              <label class="text-sm text-slate-500 dark:text-slate-400 mb-1 block">{t('tx.account')}</label>
+              <input type="text" name="account" id="form-account" maxlength="100" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 focus:border-emerald-500/50 outline-none" />
             </div>
           </div>
 
           <div>
-            <label class="text-sm text-slate-400 mb-1 block">{t('tx.method')}</label>
+            <label class="text-sm text-slate-500 dark:text-slate-400 mb-1 block">{t('tx.method')}</label>
             <div class="grid grid-cols-4 gap-2">
-              <button type="button" data-method="cash" class="form-method-btn active px-3 py-2 rounded-lg text-xs font-medium bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">{t('tx.cash')}</button>
-              <button type="button" data-method="debit" class="form-method-btn px-3 py-2 rounded-lg text-xs font-medium bg-white/5 text-slate-400 border border-slate-700/50">{t('tx.debit')}</button>
-              <button type="button" data-method="credit" class="form-method-btn px-3 py-2 rounded-lg text-xs font-medium bg-white/5 text-slate-400 border border-slate-700/50">{t('tx.credit')}</button>
-              <button type="button" data-method="transfer" class="form-method-btn px-3 py-2 rounded-lg text-xs font-medium bg-white/5 text-slate-400 border border-slate-700/50">{t('tx.transfer')}</button>
+              <button type="button" data-method="cash" class="form-method-btn active px-3 py-2 rounded-lg text-xs font-medium bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">{t('tx.cash')}</button>
+              <button type="button" data-method="debit" class="form-method-btn px-3 py-2 rounded-lg text-xs font-medium bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700/50">{t('tx.debit')}</button>
+              <button type="button" data-method="credit" class="form-method-btn px-3 py-2 rounded-lg text-xs font-medium bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700/50">{t('tx.credit')}</button>
+              <button type="button" data-method="transfer" class="form-method-btn px-3 py-2 rounded-lg text-xs font-medium bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700/50">{t('tx.transfer')}</button>
             </div>
           </div>
           <input type="hidden" name="method" value="cash" id="form-method" />
 
           <div>
-            <label class="text-sm text-slate-400 mb-1 block">{t('tx.installments')}</label>
-            <input type="number" name="installments" id="form-installments" min="1" max="48" value="1" class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-slate-700/50 text-slate-100 focus:border-emerald-500/50 outline-none" />
+            <label class="text-sm text-slate-500 dark:text-slate-400 mb-1 block">{t('tx.installments')}</label>
+            <input type="number" name="installments" id="form-installments" min="1" max="48" value="1" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-800 dark:text-slate-100 focus:border-emerald-500/50 outline-none" />
           </div>
 
           <div>
-            <label class="text-sm text-slate-400 mb-1 block">{t('tx.notes')}</label>
-            <textarea name="notes" id="form-notes" maxlength="500" rows="2" class="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-slate-700/50 text-slate-100 placeholder-slate-600 focus:border-emerald-500/50 outline-none resize-none"></textarea>
+            <label class="text-sm text-slate-500 dark:text-slate-400 mb-1 block">{t('tx.notes')}</label>
+            <textarea name="notes" id="form-notes" maxlength="500" rows="2" class="w-full px-4 py-2.5 rounded-xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-700/50 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-600 focus:border-emerald-500/50 outline-none resize-none"></textarea>
           </div>
 
           <button type="submit" id="form-save" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-cyan-500 text-white font-semibold hover:shadow-lg hover:shadow-emerald-500/25 transition-all">{t('tx.save')}</button>
-          <p class="text-xs text-slate-500 text-center">Ctrl + Enter</p>
+          <p class="text-xs text-slate-400 dark:text-slate-500 text-center">Ctrl + Enter</p>
         </form>
       </div>
     </div>
@@ -163,7 +163,6 @@ const t = useTranslations(lang);
     modal?.classList.remove('hidden');
     if (dateInput) dateInput.value = today;
     if (editData) {
-      // Populate form for edit
       (document.getElementById('form-id') as HTMLInputElement).value = editData.id;
       amountInput.value = editData.amount;
       dateInput.value = editData.date;
@@ -192,11 +191,11 @@ const t = useTranslations(lang);
   // Type toggles
   document.querySelectorAll('.form-type-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.form-type-btn').forEach(b => { b.classList.remove('active','bg-rose-500/20','text-rose-400','border-rose-500/30','bg-emerald-500/20','text-emerald-400','border-emerald-500/30'); b.classList.add('bg-white/5','text-slate-400','border-slate-700/50'); });
+      document.querySelectorAll('.form-type-btn').forEach(b => { b.classList.remove('active','bg-rose-500/20','text-rose-600','dark:text-rose-400','border-rose-500/30','bg-emerald-500/20','text-emerald-600','dark:text-emerald-400','border-emerald-500/30'); b.classList.add('bg-slate-100','dark:bg-white/5','text-slate-500','dark:text-slate-400','border-slate-200','dark:border-slate-700/50'); });
       const type = (btn as HTMLElement).dataset.type;
-      btn.classList.add('active'); btn.classList.remove('bg-white/5','text-slate-400','border-slate-700/50');
-      if (type === 'expense') btn.classList.add('bg-rose-500/20','text-rose-400','border-rose-500/30');
-      else btn.classList.add('bg-emerald-500/20','text-emerald-400','border-emerald-500/30');
+      btn.classList.add('active'); btn.classList.remove('bg-slate-100','dark:bg-white/5','text-slate-500','dark:text-slate-400','border-slate-200','dark:border-slate-700/50');
+      if (type === 'expense') btn.classList.add('bg-rose-500/20','text-rose-600','dark:text-rose-400','border-rose-500/30');
+      else btn.classList.add('bg-emerald-500/20','text-emerald-600','dark:text-emerald-400','border-emerald-500/30');
       if (typeInput) typeInput.value = type || 'expense';
     });
   });
@@ -204,8 +203,8 @@ const t = useTranslations(lang);
   // Method toggles
   document.querySelectorAll('.form-method-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.form-method-btn').forEach(b => { b.classList.remove('active','bg-emerald-500/20','text-emerald-400','border-emerald-500/30'); b.classList.add('bg-white/5','text-slate-400','border-slate-700/50'); });
-      btn.classList.add('active','bg-emerald-500/20','text-emerald-400','border-emerald-500/30'); btn.classList.remove('bg-white/5','text-slate-400','border-slate-700/50');
+      document.querySelectorAll('.form-method-btn').forEach(b => { b.classList.remove('active','bg-emerald-500/20','text-emerald-600','dark:text-emerald-400','border-emerald-500/30'); b.classList.add('bg-slate-100','dark:bg-white/5','text-slate-500','dark:text-slate-400','border-slate-200','dark:border-slate-700/50'); });
+      btn.classList.add('active','bg-emerald-500/20','text-emerald-600','dark:text-emerald-400','border-emerald-500/30'); btn.classList.remove('bg-slate-100','dark:bg-white/5','text-slate-500','dark:text-slate-400','border-slate-200','dark:border-slate-700/50');
       if (methodInput) methodInput.value = (btn as HTMLElement).dataset.method || 'cash';
     });
   });
@@ -266,23 +265,23 @@ const t = useTranslations(lang);
       const container = document.getElementById('transaction-list');
       if (container && txs && txs.length > 0) {
         container.innerHTML = txs.map((t: any) => `
-          <div class="glass rounded-xl p-4 flex items-center justify-between hover:border-slate-600/50 transition-all">
+          <div class="glass rounded-xl p-4 flex items-center justify-between hover:border-slate-300 dark:hover:border-slate-600/50 transition-all">
             <div class="flex items-center gap-3">
               <span class="text-xl">${(t.categories as any)?.icon || '📁'}</span>
               <div>
-                <p class="text-sm font-medium text-slate-200">${(t.categories as any)?.name || ''}</p>
-                <p class="text-xs text-slate-500">${t.date}${t.entity ? ' · ' + t.entity : ''}${t.notes ? ' · ' + t.notes : ''}</p>
+                <p class="text-sm font-medium text-slate-700 dark:text-slate-200">${(t.categories as any)?.name || ''}</p>
+                <p class="text-xs text-slate-400 dark:text-slate-500">${t.date}${t.entity ? ' · ' + t.entity : ''}${t.notes ? ' · ' + t.notes : ''}</p>
               </div>
             </div>
             <div class="flex items-center gap-3">
-              <span class="font-semibold ${t.type === 'income' ? 'text-emerald-400' : 'text-rose-400'}">
+              <span class="font-semibold ${t.type === 'income' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'}">
                 ${t.type === 'income' ? '+' : '-'}${fmt.format(t.amount)}
               </span>
               <div class="flex gap-1">
-                <button onclick="window.__editTx('${t.id}')" class="p-1.5 rounded-lg hover:bg-slate-700/50 text-slate-500 hover:text-slate-300 transition-colors">
+                <button onclick="window.__editTx('${t.id}')" class="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                 </button>
-                <button onclick="window.__deleteTx('${t.id}')" class="p-1.5 rounded-lg hover:bg-rose-500/10 text-slate-500 hover:text-rose-400 transition-colors">
+                <button onclick="window.__deleteTx('${t.id}')" class="p-1.5 rounded-lg hover:bg-rose-500/10 text-slate-400 dark:text-slate-500 hover:text-rose-500 dark:hover:text-rose-400 transition-colors">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                 </button>
               </div>
