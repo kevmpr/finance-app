@@ -170,7 +170,7 @@ const recent = txs.slice(0, 5);
           </button>
         </div>
 
-        <form id="quick-add-form" method="post" action="/api/transactions" class="space-y-4">
+        <form id="quick-add-form" class="space-y-4">
           <div class="grid grid-cols-2 gap-2">
             <button type="button" data-type="expense" class="type-btn active px-4 py-2.5 rounded-xl text-sm font-medium bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30">
               {t('tx.expense')}
@@ -226,7 +226,6 @@ const recent = txs.slice(0, 5);
 </Layout>
 
 <script>
-  // Modal and toggle logic only (no Supabase client-side)
   const fab = document.getElementById('quick-add-btn');
   const modal = document.getElementById('quick-add-modal');
   const backdrop = document.getElementById('modal-backdrop');
@@ -248,6 +247,27 @@ const recent = txs.slice(0, 5);
   closeBtn?.addEventListener('click', closeModal);
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeModal(); });
   document.addEventListener('keydown', (e) => { if ((e.metaKey || e.ctrlKey) && e.key === 'Enter' && !modal?.classList.contains('hidden')) form?.requestSubmit(); });
+
+  // Submit via fetch to avoid CSRF block on Vercel
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const submitBtn = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    submitBtn.disabled = true;
+    try {
+      const formData = new FormData(form);
+      const res = await fetch('/api/transactions', { method: 'POST', body: formData });
+      if (!res.ok) {
+        const msg = await res.text();
+        throw new Error(msg || 'Error saving transaction');
+      }
+      closeModal();
+      window.location.reload();
+    } catch (err: any) {
+      alert(err.message);
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
 
   // Type toggle
   document.querySelectorAll('.type-btn').forEach(btn => {
